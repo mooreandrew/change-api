@@ -11,10 +11,12 @@ def test():
 
 @app.route('/raise', methods = ['GET', 'POST'])
 def raiseweb():
+    request_data = request.get_json(force=True)
+
     test = 'test'
     rfc = str(randint(0,99999))
 
-    add_note('RFC ' + rfc + ' raised')
+    add_note('RFC ' + rfc + ' raised with title "' + request_data['description'] + '"')
     return Response(json.dumps({'rfc': rfc}),  mimetype='application/json')
 
 
@@ -44,12 +46,10 @@ def close():
     add_note('Closing rfc ' + str(request_data['rfc']))
     return Response(json.dumps({'status': 'Ok'}),  mimetype='application/json')
 
-
 def add_note(note):
     global notes
     notes = notes + note + '<br><br>'
     print(notes)
-
 
 @app.route('/update/add_outcome', methods = ['GET', 'POST'])
 def add_outcome():
